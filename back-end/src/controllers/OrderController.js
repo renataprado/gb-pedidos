@@ -52,9 +52,9 @@ module.exports = {
   },
 
   async getOrderById (req, res, next){
-    const orderId = req.params.pid;
+    const orderId = req.params.oid;
   
-    findOrderById(orderId);
+    const order = await findOrderById(orderId);
   
     res.json({ order });
   },
