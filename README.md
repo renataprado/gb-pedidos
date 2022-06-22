@@ -1,6 +1,6 @@
 # Teste Técnico - Histórico de Pedidos
 
-##Objetivos
+## Objetivos
 Representar visualmente os status mais recentes e o histórico do pedido
 
 Endpoints da API:
