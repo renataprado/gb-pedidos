@@ -5,17 +5,6 @@ const orderRoutes = require('./routes/orders.js');
 const port = process.env.PORT || 5000;
 const mongouri = process.env.MONGOURI
 
-
-mongoose
-  .connect(mongouri)
-  .then(() => {
-    console.log('conected')
-    app.listen(5000);
-  })
-  .catch(err => {
-    console.log(err);
-  });
-
 const app = express();
 
 // app.use((req, res, next)=>{
@@ -31,7 +20,19 @@ app.get('/', async (req, res, next) => {
   res.status(200).send('Hello from express!')
 })
 
+// mongoose.connect(mongouri, () => {
+//   console.log('connect to DB!');
+// })
+mongoose
+  .connect(mongouri)
+  .then(() => {
+   // console.log('connected to mongo')
+    app.listen(port);
+  })
+  .catch(err => {
+    console.log(err);
+  });
 
-//module.exports = app;
+ module.exports = app;
 
 

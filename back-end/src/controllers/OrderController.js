@@ -2,14 +2,34 @@ const mongoose = require("mongoose");
 const Order = require("../models/Order.js");
 const HttpError = require('../models/http-error');
 
-module.exports = {
+const findOrderById = async (orderId) => {
+  let order;
+  try {
+    order = await Order.find({orderId});
+  } catch (err) {
+    const error = new HttpError(
+      'Something went wrong, could not find a order.',
+      500
+    );
+    return next(error);
+  }
 
-  async getOrderById (req, res, next){
-    const orderId = req.params.pid;
-  
-    let order;
+  if (!order) {
+    const error = new HttpError(
+      'Could not find a order for the provided id.',
+      404
+    );
+    return next(error);
+  }
+  return order;
+}
+
+module.exports = {
+  async getOrdersById (req, res, next){
+
+    let uniqueOrders;
     try {
-      order = await Order.find({orderId});
+      uniqueOrders = await Order.find().distinct('orderId');
     } catch (err) {
       const error = new HttpError(
         'Something went wrong, could not find a order.',
@@ -18,20 +38,30 @@ module.exports = {
       return next(error);
     }
   
-    if (!order) {
+    if (!uniqueOrders) {
       const error = new HttpError(
-        'Could not find a order for the provided id.',
+        'Could not find a orders',
         404
       );
       return next(error);
+    } else {
+      const unresolvedPromises = uniqueOrders.map(orderId => findOrderById(orderId));
+      const orders = await Promise.all(unresolvedPromises);
+      res.json({ orders });
     }
+  },
+
+  async getOrderById (req, res, next){
+    const orderId = req.params.pid;
+  
+    findOrderById(orderId);
   
     res.json({ order });
   },
 
   async getOrders(req, res) {
     const orders = await Order.find();
-    return res.status(200).json(orders);
+    return res.json(orders);
   },
 
   // Save new order
