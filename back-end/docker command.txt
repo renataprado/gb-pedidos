@@ -1,3 +1,0 @@
-docker run -d -p 2717:27017 -v ~/mongodb:/data/db --name mymongo mongo
-
-https://www.mongodb.com/compatibility/docker

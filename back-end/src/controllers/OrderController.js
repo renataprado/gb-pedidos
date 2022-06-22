@@ -21,8 +21,8 @@ module.exports = {
     
     let orders = uniqueOrders.map(uniqueOrder =>  {
       const orderId = uniqueOrder;
-      const status = ordersStatus.filter(o => o.orderId == uniqueOrder);
-      const recentStatus = status.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(-1).pop();
+      const status = ordersStatus.filter(o => o.orderId == uniqueOrder).sort((a,b) => new Date(a.createAt) - new Date(b.createAt));
+      const recentStatus = status.slice(-1).pop();
       return {orderId, recentStatus, status};
     })
 
