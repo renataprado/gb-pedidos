@@ -1,5 +1,5 @@
 .App header {
-  background-color: #5d896a;
+  background-color: #e9c3eb;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -9,7 +9,9 @@
 }
 
 .page {
+  display: flex;
   text-align: center;
+  justify-content: center;
   background-color: #f0f0f0;
   min-height: 100vh;
   padding: 1rem;

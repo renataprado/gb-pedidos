@@ -3,8 +3,6 @@ import Box from "@mui/material/Box";
 import OrderItem from "./OrderItem";
 import { Typography } from "@mui/material";
 
-
-//const [orders, setOrders] = useState(second)
 const OrdersList = props => {
   
     useEffect(() => {
@@ -35,6 +33,7 @@ const OrdersList = props => {
             boxShadow: 1,
             borderRadius: 1,
             p: 2,
+            minWidth: "1000px"
           }}
         >
           <Typography variant="h5" gutterBottom component="div">
@@ -42,8 +41,8 @@ const OrdersList = props => {
           </Typography>
           <Box>
             <ul>
-              {props.orders.map((order) => (
-                <OrderItem order={order} />
+              {props.orders.map((order, index) => (
+                <OrderItem key={index} order={order} />
               ))}
             </ul>
           </Box>

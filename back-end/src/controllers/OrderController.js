@@ -2,66 +2,31 @@ const mongoose = require("mongoose");
 const Order = require("../models/Order.js");
 const HttpError = require('../models/http-error');
 
-const findOrderById = async (orderId) => {
-  let order;
-  try {
-    order = await Order.find({orderId});
-  } catch (err) {
-    const error = new HttpError(
-      'Something went wrong, could not find a order.',
-      500
-    );
-    return next(error);
-  }
-
-  if (!order) {
-    const error = new HttpError(
-      'Could not find a order for the provided id.',
-      404
-    );
-    return next(error);
-  }
-  return order;
-}
-
 module.exports = {
-  async getOrdersById (req, res, next){
-
-    let uniqueOrders;
-    try {
-      uniqueOrders = await Order.find().distinct('orderId');
-    } catch (err) {
-      const error = new HttpError(
-        'Something went wrong, could not find a order.',
-        500
-      );
-      return next(error);
-    }
-  
-    if (!uniqueOrders) {
-      const error = new HttpError(
-        'Could not find a orders',
-        404
-      );
-      return next(error);
-    } else {
-      const unresolvedPromises = uniqueOrders.map(orderId => findOrderById(orderId));
-      const orders = await Promise.all(unresolvedPromises);
-      res.json({ orders });
-    }
-  },
-
-  async getOrderById (req, res, next){
-    const orderId = req.params.oid;
-  
-    const order = await findOrderById(orderId);
-  
-    res.json({ order });
-  },
 
   async getOrders(req, res) {
-    const orders = await Order.find();
-    return res.json(orders);
+    let ordersStatus;
+    let uniqueOrders
+    try {
+        ordersStatus = await Order.find();
+        uniqueOrders = await Order.find().distinct('orderId');
+      } catch (err) {
+        const error = new HttpError(
+          'Something went wrong, could not find a order.',
+          500
+        );
+        return next(error);
+      }
+    
+    
+    let orders = uniqueOrders.map(uniqueOrder =>  {
+      const orderId = uniqueOrder;
+      const status = ordersStatus.filter(o => o.orderId == uniqueOrder);
+      const recentStatus = status.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(-1).pop();
+      return {orderId, recentStatus, status};
+    })
+
+    return res.json({orders});
   },
 
   // Save new order

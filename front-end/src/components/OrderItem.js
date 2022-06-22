@@ -1,32 +1,47 @@
-import { useEffect} from "react";
-import Box from '@mui/material/Box';
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useEffect, useState } from "react";
+import Box from "@mui/material/Box";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Typography,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import OrderStatus from "./OrderStatus";
 
-const OrderItem = props => {
+const OrderItem = (props) => {
+
+  const [green, setGreen] = useState(props.order.recentStatus.name.includes("entregue"))
 
   useEffect(() => {
-    console.log(props);
-  }, [props])
+    //console.log(props);
+  }, [props]);
+
 
   return (
-    <Box>
-      <Accordion>
-        <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1a-content"
-        id="panel1a-header"
-      >
-          <Typography>{props.id}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-    </Box>
+      <Box sx={{mt: 2}}>
+        <Accordion sx={{bgcolor: green ? '#c3ebd2': '#f1edb7;'}}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Box sx={{display: 'flex'}}>
+              <Typography >Pedido nº {props.order.orderId}</Typography>
+              <Typography sx={{ml: 6}}>{props.order.recentStatus.name}</Typography>
+            </Box>
+          
+            
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box sx={{display: 'flex'}}>
+              {props.order.status.map((status, index) => (
+                <OrderStatus key={index} status={status}/>
+              ))}
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      </Box>
   );
 };
 

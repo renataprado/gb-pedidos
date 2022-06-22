@@ -7,11 +7,11 @@ const mongouri = process.env.MONGOURI
 
 const app = express();
 
-// app.use((req, res, next)=>{
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type");
-//   next();
-// });
+app.use((req, res, next)=>{
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type");
+  next();
+});
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true}))
@@ -32,6 +32,7 @@ mongoose
   .catch(err => {
     console.log(err);
   });
+
 
  module.exports = app;
 
