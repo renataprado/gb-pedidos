@@ -6,9 +6,16 @@ const port = process.env.PORT || 5000;
 const mongouri = process.env.MONGOURI
 
 
-mongoose.connect(mongouri,  {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false}, () =>{
-  console.log('connect to mongoDB!');
-})
+mongoose
+  .connect(mongouri)
+  .then(() => {
+    console.log('conected')
+    app.listen(5000);
+  })
+  .catch(err => {
+    console.log(err);
+  });
+
 const app = express();
 
 // app.use((req, res, next)=>{
@@ -19,13 +26,12 @@ const app = express();
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true}))
-
+app.use('/orders', orderRoutes);
 app.get('/', async (req, res, next) => {
   res.status(200).send('Hello from express!')
 })
 
-app.use('/orders', orderRoutes);
 
-module.exports = app;
+//module.exports = app;
 
 
